@@ -1,0 +1,43 @@
+<?php
+// Configuración de la base de datos
+$servername = "localhost";
+$username = "root";
+$password = ""; // Cambia esto según tu configuración
+$dbname = "mi_base_de_datos"; // Cambia esto según tu base de datos
+
+// Crear conexión
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexión
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Consulta para contar compras por cliente
+$sql = "SELECT cliente_id, COUNT(*) AS total_compras
+        FROM compras
+        GROUP BY cliente_id";
+$result = $conn->query($sql);
+
+// Mostrar resultados
+if ($result->num_rows > 0) {
+    // Salida de datos de cada fila
+    echo "<table border='1'>
+            <tr>
+                <th>Cliente ID</th>
+                <th>Total Compras</th>
+            </tr>";
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>
+                <td>" . $row["cliente_id"]. "</td>
+                <td>" . $row["total_compras"]. "</td>
+              </tr>";
+    }
+    echo "</table>";
+} else {
+    echo "0 resultados";
+}
+
+// Cerrar conexión
+$conn->close();
+?>
